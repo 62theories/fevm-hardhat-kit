@@ -15,9 +15,11 @@ contract Cretodus {
         uint duration;
         uint filAmount;
         uint claimerCount;
+        address owner;
     }
     offer[] public offers;
-    mapping(uint => mapping(address => bool)) public IsClaimerOfOfferId;
+    mapping(uint => mapping(address => bool)) public isClaimerOfOfferId;
+    mapping(uint => bool) public isExpiredClaimed;
 
     event OfferCreated(uint256 indexed offerId);
 
@@ -28,7 +30,7 @@ contract Cretodus {
         uint duration
     ) public payable {
         uint256 offerId = offers.length;
-        offers.push(offer(cidraw, deadline, size, duration, msg.value, 0));
+        offers.push(offer(cidraw, deadline, size, duration, msg.value, 0, msg.sender));
         emit OfferCreated(offerId);
     }
 
@@ -42,17 +44,26 @@ contract Cretodus {
         require(keccak256(offers[offerId].cidraw) == keccak256(commitmentRet.data), "cid not match");
         require(offers[offerId].size == commitmentRet.size, "size not match");
         offers[offerId].claimerCount += 1;
-        IsClaimerOfOfferId[offerId][msg.sender] = true;
+        isClaimerOfOfferId[offerId][msg.sender] = true;
     }
 
     function getReward(uint offerId) public {
         require(offers[offerId].deadline > block.timestamp, "not expired yet");
-        require(IsClaimerOfOfferId[offerId][msg.sender], "can not claim");
-        IsClaimerOfOfferId[offerId][msg.sender] = false;
+        require(offers[offerId].claimerCount > 0,"claimer must be greater than zero");
+        require(isClaimerOfOfferId[offerId][msg.sender], "can not claim");
+        isClaimerOfOfferId[offerId][msg.sender] = false;
         payable(address(msg.sender)).transfer(offers[offerId].filAmount/offers[offerId].claimerCount);
     }
 
     function getOffersLength() public view returns (uint) {
         return offers.length;
+    }
+
+    function getExpiredReward(uint offerId) public {
+        require(offers[offerId].deadline > block.timestamp, "not expired yet");
+        require(offers[offerId].claimerCount == 0,"claimer must be zero");
+        require(!isExpiredClaimed[offerId],"must not claim yet");
+        isExpiredClaimed[offerId] = true;
+        payable(address(msg.sender)).transfer(offers[offerId].filAmount);
     }
 }
