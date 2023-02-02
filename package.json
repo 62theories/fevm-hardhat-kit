@@ -31,7 +31,9 @@
     "prettier": "^2.4.1",
     "prettier-plugin-solidity": "^1.0.0-beta.19",
     "solhint": "^3.3.6",
-    "solidity-coverage": "^0.7.13"
+    "solidity-coverage": "^0.7.13",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
   },
   "dependencies": {
     "@glif/filecoin-address": "^2.0.18",
@@ -44,9 +46,7 @@
     "@zondax/filecoin-solidity-mock-api": "^0.2.0",
     "babel-eslint": "^10.1.0",
     "dotenv": "^10.0.0",
-    "hardhat-deploy-ethers": "^0.3.0-beta.13",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.9.4"
+    "hardhat-deploy-ethers": "^0.3.0-beta.13"
   },
   "mocha": {
     "timeout": 10000000
