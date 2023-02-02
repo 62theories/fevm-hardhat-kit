@@ -1,19 +1,21 @@
-require("@nomicfoundation/hardhat-toolbox")
-require("hardhat-deploy")
-require("hardhat-deploy-ethers")
-require("./tasks")
-require("dotenv").config()
+import "@nomicfoundation/hardhat-toolbox"
+import "hardhat-deploy"
+import "hardhat-deploy-ethers"
+import { HardhatUserConfig } from "hardhat/config"
+import "./tasks"
+import dotenv from "dotenv"
+dotenv.config()
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 /** @type import('hardhat/config').HardhatUserConfig */
-module.exports = {
+const config: HardhatUserConfig = {
     solidity: "0.8.17",
     defaultNetwork: "hyperspace",
     networks: {
         hyperspace: {
             chainId: 3141,
             url: "https://api.hyperspace.node.glif.io/rpc/v1",
-            accounts: [PRIVATE_KEY],
+            accounts: [PRIVATE_KEY as string],
         },
     },
     paths: {
@@ -23,3 +25,5 @@ module.exports = {
         artifacts: "./artifacts",
     },
 }
+
+export default config
