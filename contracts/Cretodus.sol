@@ -93,4 +93,8 @@ contract Cretodus {
         HyperActor.call_actor_id(METHOD_SEND, amount, DEFAULT_FLAG, Misc.NONE_CODEC, emptyParams, actorID);
 
     }
+
+    function getSpCountOfOffer(uint offerId) public view returns (uint) {
+        return offerIdToDealIds[offerId].length;
+    }
 }
