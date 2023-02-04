@@ -17,7 +17,6 @@ contract Cretodus {
     offer[] public offers;
     mapping(uint => uint[]) public offerIdToDealIds;
     mapping(uint => bool) public isClaimedReward;
-    // mapping(uint => bool) public isExpiredClaimed;
     mapping(uint => bool) public isDealedIdUsed;
     address constant CALL_ACTOR_ID = 0xfe00000000000000000000000000000000000005;
     uint64 constant DEFAULT_FLAG = 0x00000000;
@@ -75,13 +74,13 @@ contract Cretodus {
         return offers.length;
     }
 
-    // function getExpiredReward(uint offerId) public {
-    //     require(offers[offerId].deadline <= block.timestamp, "not expired yet");
-    //     require(offers[offerId].claimerCount == 0,"claimer must be zero");
-    //     require(!isExpiredClaimed[offerId],"must not claim yet");
-    //     isExpiredClaimed[offerId] = true;
-    //     payable(address(msg.sender)).transfer(offers[offerId].filAmount);
-    // }
+    function getExpiredReward(uint offerId) public {
+        require(!isClaimedReward[offerId],"claimed");
+        require(offers[offerId].deadline <= block.timestamp, "not expired yet");
+        require(offerIdToDealIds[offerId].length == 0,"must not have dealId");
+        isClaimedReward[offerId] = true;
+        payable(address(msg.sender)).transfer(offers[offerId].filAmount);
+    }
 
     // ส่ง Fil ให้กับ storage provider
     // @param actorID คือ actorID ของ storage provider
