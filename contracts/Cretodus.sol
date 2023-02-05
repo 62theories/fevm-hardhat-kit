@@ -17,7 +17,7 @@ contract Cretodus {
     offer[] public offers;
     mapping(uint => uint[]) public offerIdToDealIds;
     mapping(uint => bool) public isClaimedReward;
-    mapping(uint => bool) public isDealedIdUsed;
+    // mapping(uint => bool) public isDealedIdUsed;
     address constant CALL_ACTOR_ID = 0xfe00000000000000000000000000000000000005;
     uint64 constant DEFAULT_FLAG = 0x00000000;
     uint64 constant METHOD_SEND = 0;
@@ -49,8 +49,8 @@ contract Cretodus {
             .getDealDataCommitment(MarketTypes.GetDealDataCommitmentParams({id: dealId}));
         require(offers[offerId].deadline > block.timestamp, "expired offer");
         require(keccak256(offers[offerId].cidraw) == keccak256(commitmentRet.data), "cid not match");
-        require(!isDealedIdUsed[dealId], "dealId used");
-        isDealedIdUsed[dealId] = true;
+        // require(!isDealedIdUsed[dealId], "dealId used");
+        // isDealedIdUsed[dealId] = true;
         offerIdToDealIds[offerId].push(dealId);
     }
 
